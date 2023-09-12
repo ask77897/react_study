@@ -1,0 +1,174 @@
+생명주기
+1.마운팅(Mounting)
+컴포넌트 인스턴스가 생성되어 DOM에 삽입될 때 메소드들이 차례로 실행된다
+    constructor() : 컴포넌트가 마운트되기 전에 호출된다. 초기 state를 정의, 설정할 수 있다.
+    static getDerivedStateFromProps() : props를 받아 state를 업데이트할 때 사용된다.
+    render() : 컴포넌트 UI를 랜더링한다.
+    componentDidMount() : 컴포넌트가 마운된 직후(DOM에 삽입된 직후)
+
+2.업데이팅(Updating)
+props나 state가 변경되면 업데이팅이 발생하고 메소드들이 차례로 실행된다.
+    static getDerivedStateFromProps() : 
+    shouleComponentUpdate() : props나 state를 변경시 리랜더링 전에 호출된다.
+    render()
+    getSnapshotBeforeUpdate() : render의 결과가 DOM에 반영되기 직전에 호출된다.
+    componentDidUpdate() : 업데이트 직후에 실행된다. 이전 props와 state를 호출한다.
+
+3.언마운팅(Unmounting)
+컴포넌트가 DOM에서 제거될 때 메소드가 실행된다.
+    componentWillUnmount()
+
+Fragment
+React에서 여러 요소를 감싸주기 위해 사용되는 특별한 컴포넌트
+Fragment를 사용하면 추가적인 DOM노드를 생성하지 않고도 여러 요소를 그룹화할 수 있다.
+일반적으로 JSX 코드에서 컴포넌트에는 하나의 최상위 요소만이 존재해야 한다. 그래서 불필요하게 <div> 또는 다른 요소를 선언한다.
+이러한 상황에서 Fragment를 사용해서 요소들을 그룹화한다.
+Fragment는 아무런 출력을 하지 않고, 자식 요소를 그룹화하는 역할만 수행한다.
+Fragment는 <> 열고, </> 닫는다. 혹은 <React.Fragment> </React.Fragment>로 작성할 수 있다.
+
+class Example extends Component{
+    render(){
+        return(
+            <>
+                <>
+                    <p>Hello~</p>
+                    <button>push~</button>
+                </>
+                <>
+                    <p>byebye</p>
+                    <button>Don`t push</button>
+                </>
+            </>
+        )
+    }
+}
+
+Context API(상태 관리 라이브러리)
+React 내장 기능, 복잡한 어플리케이션에서 여러 컴포넌트 간의 상태를 공유하기 위해 사용한다.
+전역적으로 데이터를 공유할 수 있게 해주는 기능이다. 주로 어플리케이션 전체나 일부 컴포넌트 트리에서 공유해야하는 데이터에 사용된다.
+Context API를 사용하면 중간 단계의 컴포넌트들을 거치지 않고 컴포넌트 트리 아래의 모든 컴포넌트들이 값을 공유할 수 있다.
+
+const MyContext = React.createContext(defaultValue);
+
+<MyContext.Provider value={}>
+Provider : 컴포넌트를 사용하여 하위 컴포넌트에게 현재의 text값을 전달한다.
+
+하위 컴포넌트에서는 MyContext.Consumer를 사용하여 context 값을 소비하거나, useContext() Hook을 사용하여 함수형 컴포넌트 내에서 직접 접근할 수 있다.
+
+Redux(상태 관리 라이브러리)
+어플리케이션의 상태를 저장하는 중앙 집중식 저장소(store) 개념을 제공하며, 상태변경은 action, reducer등을 통해 관리한다.
+react-redux 별도의 라이브러리가 함께 자주 사용되며, Redux store와 React 컴포넌트 사이의 연결을 돕는다.
+단, Redux는 큰 규모와 복잡한 상태 관리가 필요한 프로젝트에서 주로 사용한다.
+
+
+Hooks : React 함수형 컴포넌트에서 상태(state)와 생명주기를 사용할 수 있게 해주는 기능.
+
+클래스 컴포넌트 -> 함수형 컴포넌트 
+1.useState Hook 
+상태(state)를 함수형 컴포넌트에서 관리할 수 있게 해준다.
+일반적으로 배열 형태로 반환되며 첫번째 값이 상태 값, 두번째 값이 상태 값을 업데이트 해주는 함수
+import React, {useState} from 'react';
+
+function Example(){
+    const [number, setNumber] = useState(1);
+
+    const Click = () => {
+        setNumber(number+1);
+    };
+    return(
+        <p>값 : {number}</p>
+        <button onClick={Click}>증가</button>
+    );
+}
+
+2.useEffect Hook
+생명주기 메소드(componentDidMount, componentDidUpdate, componentWillUnmount)와 비슷한 역할을 한다.
+특정 작업, 상태 변화를 진행함에 있어 부작용(side effect)을 처리하는데 사용한다.
+side effect는 데이터 가져오기, 수동적인 DOM 조작 등과 같이 다른 컴포넌트에 영향을 줄 수 있는 작업들
+
+import React, {useState, useEffect} from 'react';
+
+function Example(){
+    const [num, setNum] = useState(1);
+    
+    const Click = () => {
+        setNumber(number+1);
+    };
+
+    useEffect(() => {
+        document.title = '값 : ${num}';
+
+        return () => {
+            document.title = 'React App'; //cleanup function
+        }
+    }, [num]);
+    //첫번째 인자는 side effect를 수행하는 함수
+    //첫번째 인자는 함수 내부에서 문서 제목을 변경한다.
+    //두번째 인자는 dependency array
+    //두번째 인자는 배열이 변할 때, 첫번째로 전달된 side effect 함수가 실행된다.
+
+    //cleanup function (반환하는 함수)
+    //컴포넌트 unmount시 dependency가 변경되기 전에 여기서 필요한 작업을 할 수 있다.
+
+    return(
+        <p>값 : {number}</p>
+        <button onClick={Click}>증가</button>
+        <button onClick={() => setNum(count+1)}>증가</button>//위에서 Click 함수 없으면
+    )
+}
+
+
+useContext Hook
+Context API를 함수형 컴포넌트에서 사용할 수 있도록 도와준다.
+전역적인 상태를 관리하거나 깊은 중첩에 걸친 컴포넌트들에게 props를 전달하는 것을 피하기 위해 사용된다.
+useContext Hook을 사용하면 context 객체를 인자로 받아 해당 context의 값을 반환한다.
+이 값은 context Provider 컴포넌트에서 제공되며, Provider가 없다면 context 객체 생성시 전달된 기본 값이 된다.
+
+import React, {useContext} from 'react';
+
+const MyContext = React.createContext();
+function MyComponent(){
+    const value = useContext(MyContext);
+
+    return <p>{value}</p>;
+}
+
+function Example(){
+    return(
+        <MyContext.Provider value = "Hello">
+            <MyComponent/>
+        </MyContext.Provider>
+    )
+}
+
+Provider
+Context API에서 중요한 역할을 하는 컴포넌트
+Provider는 context를 생성할 때 반환되는 컴포넌트로, 그 자식 컴포넌트들에게 context 값을 제공한다.
+
+useReducer Hook
+복잡한 상태 로직을 다루기 위해 사용된다. useState보다 더 강력한 방식으로 작동하며 액션(action)과 리듀서(reducer)패턴을 사용한다.
+현재 상태와 함수를 쌍으로 제공한다. 함수는 액션(action)을 인자로 받아 reducer한테 전달하고, reducer는 현재 상태와 action을 기반으로 새로운 상태를 생성한다.
+
+import React, {useReducer} from 'react';
+
+const reducer = (state, action) => {
+    switch (action.type){
+        case 'increment':
+            return{count:state.count+1};
+        case 'decrement':
+            return{count:state.count-1};
+        default:
+            return{count:state.count}
+    }
+}
+function Example(){
+    const [state, dispatch] = useReducer(reducer, {count:0});
+
+    return(
+        <>
+            <p>Count: {state.count}</p>
+            <button onClick={() => dispatch({type:'increment'})}>+</button>
+            <button onClick={() => dispatch({type:'decrement'})}>-</button>
+        </>
+    );
+}
