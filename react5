@@ -1,0 +1,40 @@
+리액트 스타일링
+1.Inline 스타일링
+컴포넌트 내부에 style 속성을 직접 적용하여 인라인 스타일을 적용한다.
+자바스크립트 형태로 작성되며, 컴포넌트의 JSX 요소 직접 지정된다.
+
+<div stlye={{color:'red', fontsize:'16px'}}>Hello</div>
+
+2.CSS 모듈(CSS modules)
+CSS모듈은 리액트에서 제공하는 기능. 컴포넌트 단위로 CSS클래스를 고유하게 지정한다.
+CSS파일은 로컬범위(Local Scope)를 가지며, 동일한 이름의 클래스끼리의 충돌을 방지한다.
+
+import myStyle from './myComponent.module.css';
+
+function myComponent(){
+    return <div classname={myStyle.container}>Hello</div>
+}
+
+3.CSS-in-JS 라이브러리
+CSS-in-JS 라이브러리는 Javascript 코드 안에서 스타일을 작성하고 관리할 수 있는 방식
+가장 유명한 CSS-in-JS 라이브러리는 styled-components를 사용하여 템플릿 리터럴 문법으로 컴포넌트와 관련된 스타일을 정의 할 수 있다.
+
+import style from 'styled-components';
+
+const MyButton = styled.button`
+    backgroud-color: aqua;
+    color: white;
+    fontsize: 16px;
+    padding: 10px;
+`;
+
+function myComponent(){
+    return <MyButton>Hello</MyButton>
+}
+
+외부 CSS 프레임워크 및 라이브러리
+외부 프레임워크, 라이브러리를 사용하여 디자인 시스템을 구축한다.
+Bootstrap 가장 인기 있는 HTML, CSS, Javascript 프론트엔드 프레임워크
+1.그리드 시스템: 유연한 배치, 반응형 레이아웃
+2.버튼, 네비게이션 바, 카드 등 정의된 컴포넌트 제공
+
